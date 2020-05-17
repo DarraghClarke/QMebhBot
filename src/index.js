@@ -3,7 +3,8 @@
  * @param {import('probot').Application} app
  */
 module.exports = app => {
-  // Your code here
+  let dict = {}
+
   app.log('Yay, the app was loaded!')
 
   app.on('issues.opened', async context => {
@@ -11,9 +12,9 @@ module.exports = app => {
     return context.github.issues.createComment(issueComment)
   })
 
-  // For more information on building apps:
-  // https://probot.github.io/docs/
+  app.on('issue_comment.created', async context => {
+    const issueComment = context.issue({ body: 'Thanks for opening this issue!' })
+    return context.github.issues.createComment(issueComment)
+  })
 
-  // To get your app running against GitHub, see:
-  // https://probot.github.io/docs/development/
 }

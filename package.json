@@ -1,6 +1,6 @@
 {
   "name": "Aine",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "private": true,
   "description": "A Hobby Project Github Bot",
   "author": "Darragh Clarke <darragh.clarke@ucdconnect.ie>",
@@ -15,7 +15,7 @@
   ],
   "scripts": {
     "dev": "nodemon",
-    "start": "probot run ./index.js",
+    "start": "probot run src/index.js",
     "lint": "standard --fix",
     "test": "jest && standard",
     "test:watch": "jest --watch --notify --notifyMode=change --coverage"

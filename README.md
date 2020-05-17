@@ -1,6 +1,6 @@
 # Aine
 
-> A GitHub App built with [Probot](https://github.com/probot/probot) that A Hobby Project Github Bot
+> A GitHub hobby project built with [Probot](https://github.com/probot/probot)
 
 ## Setup
 
