@@ -1,6 +1,6 @@
-# Aine
+# QMebh
 
-> A GitHub hobby project built with [Probot](https://github.com/probot/probot)
+> A GitHub hobby project built with [Probot](https://github.com/probot/probot), aims to gamify a project, for people who want that kind of thing
 
 ## Setup
 
