@@ -1,13 +1,13 @@
 {
-  "name": "Aine",
-  "version": "1.0.2",
+  "name": "QMebh",
+  "version": "1.0.9",
   "private": true,
   "description": "A Hobby Project Github Bot",
   "author": "Darragh Clarke <darragh.clarke@ucdconnect.ie>",
   "license": "ISC",
-  "repository": "https://github.com/DarraghClarke/Aine.git",
-  "homepage": "https://github.com/DarraghClarke/Aine",
-  "bugs": "https://github.com/DarraghClarke/Aine/issues",
+  "repository": "https://github.com/DarraghClarke/QMebhBot.git",
+  "homepage": "https://github.com/DarraghClarke/QMebhBot",
+  "bugs": "https://github.com/DarraghClarke/QMebhBot/issues",
   "keywords": [
     "probot",
     "github",
@@ -15,7 +15,7 @@
   ],
   "scripts": {
     "dev": "nodemon",
-    "start": "probot run src/index.js",
+    "start": "probot run ./src/index.js",
     "lint": "standard --fix",
     "test": "jest && standard",
     "test:watch": "jest --watch --notify --notifyMode=change --coverage"
