@@ -17,8 +17,12 @@ module.exports = app => {
   })
 
   app.on('issue_comment.created', async context => {
-    const owner = context.payload.sender
-    const repo = context.payload.repository
+    const owner = context.payload.sender.login
+    // const login = owner.login
+    // console.log('before')
+    // eslint-disable-next-line no-useless-escape
+    console.log(owner)
+    // console.log('after')
     dict[owner] = (dict[owner] || 0) + 1
     const leaderboardStatus = await leaderboardExists(context)
     if (leaderboardStatus === true) {
@@ -27,9 +31,9 @@ module.exports = app => {
       await createLeaderboard(context)
     }
   })
-
   async function updateLeaderboard (app, ctx) {
-    ctx.github.issues.update(ctx.repo({ issue_number, body: ' body update' }))
+    const body = await getLeaderBoardRanked()
+    ctx.github.issues.update(ctx.repo({ issue_number, body: body.toString() }))
   }
   async function createLeaderboard (ctx) {
     return ctx.github.issues.create(ctx.repo({ title: title, body: 'new blank leadboderboard' }))
@@ -45,5 +49,36 @@ module.exports = app => {
       return true
     }
     return false
+  }
+
+  // eslint-disable-next-line no-unused-vars
+  async function getLeaderboard () {
+    const rankedLeaderboard = getLeaderBoardRanked()
+    return rankedLeaderboard
+  }
+
+  async function getLeaderBoardRanked () {
+    // const items = Object.keys(dict).map(function (key) {
+    //  return [key, dict[key]]
+    // })
+    // eslint-disable-next-line no-array-constructor
+    var arrayKeys = new Array()
+    // eslint-disable-next-line no-array-constructor
+    var arrayValues = new Array()
+    for (var key in dict) {
+      arrayKeys.push(key)
+      arrayValues.push(dict[key])
+    }
+
+    console.log(arrayKeys.toString())
+    console.log(arrayValues.toString())
+    // Sort the array based on the second element
+    // items.sort(function (first, second) {
+    // return second[1] - first[1]
+    // })
+    // dict.sorte((a, b) => a.value - b.value)
+    // console.log(dict)
+    // return dict.join(', ')
+    return arrayKeys.toString().concat(arrayValues.toString())
   }
 }
