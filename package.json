@@ -1,6 +1,6 @@
 {
   "name": "QMebh",
-  "version": "1.0.10",
+  "version": "1.0.11",
   "private": true,
   "description": "A Hobby Project Github Bot",
   "author": "Darragh Clarke <darragh.clarke@ucdconnect.ie>",
@@ -21,7 +21,8 @@
     "test:watch": "jest --watch --notify --notifyMode=change --coverage"
   },
   "dependencies": {
-    "probot": "^9.5.3"
+    "probot": "^9.5.3",
+    "probot-metadata": "git+https://git@github.com/DarraghClarke/metadata.git"
   },
   "devDependencies": {
     "jest": "^24.9.0",
