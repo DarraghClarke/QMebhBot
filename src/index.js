@@ -23,6 +23,8 @@ module.exports = bot => {
     } else {
       createLeaderboard(context)
     }
+    // finally update the "database" stored in metadata
+    metadata(context).set(dict)
   })
 
   bot.on('issues.opened', async context => {
@@ -51,7 +53,6 @@ module.exports = bot => {
     } else {
       await createLeaderboard(ctx)
     }
-    await metadata(ctx).set(dict)
   }
 
   async function updateLeaderboard (bot, ctx) {
