@@ -2,6 +2,8 @@
 
 > A GitHub hobby project built with [Probot](https://github.com/probot/probot), aims to gamify a project, for people who want that kind of thing
 
+Currently it creates a leaderboard as a new Issue, and as people comment/open PR's/ create issues, it awards them points and places these points on the leaderboard. It also stores information as metadata on this leaderboard so if the bot goes offline it can get the metadata back when it relaunches. 
+
 ## Setup
 
 ```sh
