@@ -8,6 +8,14 @@
 # Install dependencies
 npm install
 
+#Create a config.yml file in the .github folder in the format
+quietMode: {true/false}
+createIssuePoints: {int value}
+issueCommentPoints: {int value}
+createPullRequestPoints: {int value}
+pullRequestCommentPoints: {int value}
+pullRequestMergedPoints: {int value}
+
 # Run the bot
 npm start
 ```
