@@ -1,4 +1,5 @@
 const metadata = require('probot-metadata')
+const configuration = require('configuration')
 // const createScheduler = require('probot-scheduler')
 /**
  * This is the main entrypoint to your Probot app
@@ -9,12 +10,6 @@ module.exports = bot => {
   const title = 'QMebh Leaderboard'
   let issueNumber = null
   let leaderboardIssue = null
-  let quietMode = null
-  let createIssuePoints = 2
-  let issueCommentPoints = 1
-  let createPullRequestPoints = 5
-  let pullRequestCommentPoints = 2
-  let pullRequestMergedPoints = 3
 
   bot.log('Yay, the app was loaded!')
 
@@ -44,9 +39,9 @@ module.exports = bot => {
   })
 
   async function handleUpdate (ctx, owner, type) {
-    if (quietMode === null) {
-      quietMode = true // set to true by default but check incase config says otherwise
-      await loadConfig(ctx)
+    if (configuration.quietMode === null) {
+      configuration.quietMode = true // set to true by default but check incase config says otherwise
+      await configuration.load(ctx)
       if (await leaderboardExists(ctx) === true) {
         getLeaderboardFromMetadata(ctx)
       } else {
@@ -55,19 +50,19 @@ module.exports = bot => {
     }
     switch (type) {
       case 'issue_comment.created':
-        dict[owner] = (dict[owner] || 0) + issueCommentPoints
+        dict[owner] = (dict[owner] || 0) + configuration.issueCommentPoints
         break
       case 'issues.opened':
-        dict[owner] = (dict[owner] || 0) + createIssuePoints
+        dict[owner] = (dict[owner] || 0) + configuration.createIssuePoints
         break
       case 'pull_request.opened':
-        dict[owner] = (dict[owner] || 0) + createPullRequestPoints
+        dict[owner] = (dict[owner] || 0) + configuration.createPullRequestPoints
         break
       case 'pull_request.merged':
-        dict[owner] = (dict[owner] || 0) + pullRequestMergedPoints
+        dict[owner] = (dict[owner] || 0) + configuration.pullRequestMergedPoints
         break
       case 'pull_request_review_comment.created':
-        dict[owner] = (dict[owner] || 0) + pullRequestCommentPoints
+        dict[owner] = (dict[owner] || 0) + configuration.pullRequestCommentPoints
         break
     }
 
@@ -81,7 +76,7 @@ module.exports = bot => {
 
   async function updateLeaderboard (bot, ctx) {
     const body = await getLeaderBoardRanked()
-    if (quietMode === true || quietMode === null) {
+    if (configuration.quietMode === true || configuration.quietMode === null) {
       console.log('in silent mode, did not make changes, would have updated leaderboard issue with ' + body)
     } else {
       ctx.github.issues.update(ctx.repo({ issue_number: issueNumber, body: body.toString() }))
@@ -89,7 +84,7 @@ module.exports = bot => {
   }
 
   async function createLeaderboard (ctx) {
-    if (quietMode === true || quietMode === null) {
+    if (configuration.quietMode === true || configuration.quietMode === null) {
       console.log('in silent mode, did not make changes, would have created leaderboard issue ')
     } else {
       ctx.github.issues.create(ctx.repo({ title: title, body: 'new blank leadboderboard' }))
@@ -119,28 +114,5 @@ module.exports = bot => {
       formattedLeaderboard = formattedLeaderboard + key + ' - ' + dict[key] + ' points\n'
     }
     return formattedLeaderboard
-  }
-
-  async function loadConfig (context) {
-    const config = await context.config('config.yml')
-    if (config.quietMode === false) {
-      quietMode = config.quietMode
-    }
-
-    if (config.createIssuePoints) {
-      createIssuePoints = config.createIssuePoints
-    }
-    if (config.issueCommentPoints) {
-      issueCommentPoints = config.issueCommentPoints
-    }
-    if (config.createPullRequestPoints) {
-      createPullRequestPoints = config.createPullRequestPoints
-    }
-    if (config.pullRequestCommentPoints) {
-      pullRequestCommentPoints = config.pullRequestCommentPoints
-    }
-    if (config.pullRequestMergedPoints) {
-      pullRequestMergedPoints = config.pullRequestMergedPoints
-    }
   }
 }
