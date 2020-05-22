@@ -1,6 +1,6 @@
 const metadata = require('probot-metadata')
-const configuration = require('configuration')
-// const createScheduler = require('probot-scheduler')
+const configuration = require('./configuration')
+
 /**
  * This is the main entrypoint to your Probot app
  * @param {import('probot').Application} app
@@ -14,8 +14,10 @@ module.exports = bot => {
   bot.log('Yay, the app was loaded!')
 
   bot.on('issues.opened', async context => {
-    const owner = context.payload.sender.login
-    handleUpdate(context, owner, 'issues.opened')
+    if (!context.isBot()) {
+      const owner = context.payload.sender.login
+      handleUpdate(context, owner, 'issues.opened')
+    }
   })
 
   bot.on('issue_comment.created', async context => {
@@ -43,11 +45,12 @@ module.exports = bot => {
       configuration.quietMode = true // set to true by default but check incase config says otherwise
       await configuration.load(ctx)
       if (await leaderboardExists(ctx) === true) {
-        getLeaderboardFromMetadata(ctx)
+        await getLeaderboardFromMetadata(ctx)
       } else {
         createLeaderboard(ctx)
       }
     }
+
     switch (type) {
       case 'issue_comment.created':
         dict[owner] = (dict[owner] || 0) + configuration.issueCommentPoints
@@ -65,13 +68,7 @@ module.exports = bot => {
         dict[owner] = (dict[owner] || 0) + configuration.pullRequestCommentPoints
         break
     }
-
-    const leaderboardStatus = await leaderboardExists(ctx, ctx.github)
-    if (await leaderboardStatus === true) {
-      await updateLeaderboard(bot, ctx)
-    } else {
-      await createLeaderboard(ctx)
-    }
+    await updateLeaderboard(bot, ctx)
   }
 
   async function updateLeaderboard (bot, ctx) {
@@ -80,19 +77,21 @@ module.exports = bot => {
       console.log('in silent mode, did not make changes, would have updated leaderboard issue with ' + body)
     } else {
       ctx.github.issues.update(ctx.repo({ issue_number: issueNumber, body: body.toString() }))
+      setTimeout(function () { metadata(ctx).set(dict) }, 1500)
     }
   }
-
   async function createLeaderboard (ctx) {
     if (configuration.quietMode === true || configuration.quietMode === null) {
       console.log('in silent mode, did not make changes, would have created leaderboard issue ')
     } else {
       ctx.github.issues.create(ctx.repo({ title: title, body: 'new blank leadboderboard' }))
+      leaderboardExists(ctx)// this sets some information needed later
     }
   }
 
   async function getLeaderboardFromMetadata (ctx) {
     dict = await metadata(ctx, leaderboardIssue).getAll()
+    console.log('aahh')
   }
 
   async function leaderboardExists (ctx) {

@@ -3,12 +3,12 @@ let issueCommentPoints = 1
 let createPullRequestPoints = 5
 let pullRequestCommentPoints = 2
 let pullRequestMergedPoints = 3
-let quietMode = null
+const quietMode = null
 
 async function load (context) {
   const config = await context.config('config.yml')
   if (config.quietMode === false) {
-    quietMode = config.quietMode
+    module.exports.quietMode = config.quietMode
   }
 
   if (config.createIssuePoints) {
